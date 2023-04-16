@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <style>
+        .timer-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        #timer {
+            font-size: 4rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        button {
+            font-size: 1.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            border: none;
+            cursor: pointer;
+            background-color: #2ecc71;
+            color: #fff;
+            transition: all 0.2s ease;
+        }
+
+        button:hover {
+            background-color: #27ae60;
+        }
+    </style>
+    <div class="timer-container">
+        <div id="timer">30:00</div>
+        <div class="start-button" onclick="startTimer()">Start</div>
+        <div class="reset-button" onclick="resetTimer()">Reset</div>
+    </div>
+    <script>
+        let countdown;
+        let timerExpiredSound = new Audio('./meo.mp3'); // You can replace this with your own sound file.
+
+        function startTimer() {
+            const countingFrom = Date.now();
+            const countingTo = countingFrom + (30 * 60 * 1000); // set the time to 25 minutes
+            displayTimeLeft((countingTo - countingFrom) / 1000);
+
+            countdown = setInterval(() => {
+                const secondsLeft = Math.round((countingTo - Date.now()) / 1000);
+
+                if (secondsLeft < 0) {
+                    clearInterval(countdown);
+                    timerExpiredSound.play(); // Play the sound when the timer expires
+                    return;
+                }
+
+                displayTimeLeft(secondsLeft);
+            }, 1000);
+        }
+
+        function displayTimeLeft(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            const remainderSeconds = seconds % 60;
+            const display = `${minutes}:${remainderSeconds < 10 ? '0' : ''}${remainderSeconds}`;
+            document.getElementById('timer').textContent = display;
+        }
+
+        function resetTimer() {
+            clearInterval(countdown);
+            document.getElementById('timer').textContent = '25:00';
+        }
+    </script>
+</body>
+
+</html>
